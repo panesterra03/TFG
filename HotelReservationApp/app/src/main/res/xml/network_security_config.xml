@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- Permite HTTP solo para la IP de tu PC (la IP del servidor) -->
+        <domain includeSubdomains="true">192.168.18.66</domain>  <!-- Tu IP local aquí -->
+    </domain-config>
+</network-security-config>
