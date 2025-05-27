@@ -1,7 +1,5 @@
 package com.gestionHoteles.TFG.utils;
 
-import javax.crypto.SecretKey;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;

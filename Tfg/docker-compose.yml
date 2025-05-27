@@ -10,3 +10,19 @@ services:
       MYSQL_PASSWORD: patata
     ports:
       - 3333:3306
+
+  ngrok:
+      image: ngrok/ngrok:latest
+      container_name: ngrok
+      restart: no
+      environment:
+        NGROK_AUTHTOKEN: 2xPmclRJGOt04KOiKavq0MeR3na_3GJCTrLf1qmVcayqYGYMf
+      command:
+        - "start"
+        - "--config"
+        - "/etc/ngrok.yml"
+        - "app"
+      volumes:
+        - ./ngrok.yml:/etc/ngrok.yml
+      ports:
+        - 4040:4040

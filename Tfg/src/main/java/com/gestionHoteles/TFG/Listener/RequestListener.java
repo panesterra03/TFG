@@ -25,6 +25,8 @@ public class RequestListener extends OncePerRequestFilter {
         System.out.println("URI solicitada: " + uri);
 
         // Comprobar si es una ruta privada
+
+
         if (uri.startsWith("/api/private")) {
             // Leer el header Authorization
             String authHeader = request.getHeader("Authorization");

@@ -43,8 +43,7 @@ public class ServicioUsuario {
         }
     }
     
-    public Usuario registrarUsuario(String nombre, String correo, String contraseña) {
-
+    public Usuario registrarUsuario(String nombre, String correo, String contraseña,  String rol) {
 
      // Validar datos
      if (nombre == null || nombre.isEmpty()) {
@@ -69,7 +68,7 @@ public class ServicioUsuario {
     nuevoUsuario.setNombre(nombre);
     nuevoUsuario.setCorreo(correo);
     nuevoUsuario.setContraseña(contraseña); 
-    nuevoUsuario.setRol("user");
+    nuevoUsuario.setRol(rol);
 
 
     // Guardar el nuevo usuario en la base de datos

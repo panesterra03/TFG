@@ -73,6 +73,10 @@ public class ControladorUsuario {
             String nombre = datos.get("nombre");
             String correo = datos.get("correo");
             String contraseña = datos.get("contraseña");
+            String rol = datos.get("rol");
+            if (rol == null || rol.trim().isEmpty()) {//por si acaso no se le pasa el rol
+                rol = "user";
+            }
             
             if (nombre == null || correo == null || contraseña == null) {
                 Map<String, Object> response = new HashMap<>();
@@ -81,7 +85,7 @@ public class ControladorUsuario {
                 return ResponseEntity.badRequest().body(response);
             }
             
-            Usuario usuario = servicio.registrarUsuario(nombre, correo, contraseña);
+            Usuario usuario = servicio.registrarUsuario(nombre, correo, contraseña , rol);
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);

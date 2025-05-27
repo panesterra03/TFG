@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gestionHoteles.TFG.Entity.Reserva;
+import com.gestionHoteles.TFG.Entity.Hotel;
+import com.gestionHoteles.TFG.Repository.RepositoryHotel;
 import com.gestionHoteles.TFG.Services.ServiceReserva;
 
 @RestController
@@ -21,6 +23,8 @@ import com.gestionHoteles.TFG.Services.ServiceReserva;
 public class ReservaControler {
     @Autowired
     private ServiceReserva servicio;  
+    @Autowired
+    private RepositoryHotel RepositoryHotel;  
 @PostMapping("/crearReserva")
 public ResponseEntity<?> crearReserva(@RequestBody Map<String, Object> reservaData) {
     try {
@@ -30,6 +34,9 @@ public ResponseEntity<?> crearReserva(@RequestBody Map<String, Object> reservaDa
         String fechaInicioStr = (String) reservaData.get("fechaInicio");
         String fechaFinStr = (String) reservaData.get("fechaFin");
         int cantidad = reservaData.get("cantidad") != null ? Integer.parseInt(reservaData.get("cantidad").toString()) : 1;
+        String Nhotel =(String)reservaData.get("hotel");
+
+        Hotel hotel =RepositoryHotel.findByNombre(Nhotel);
 
         if (nombreUsuario == null || numeroHabitacion == null || fechaInicioStr == null || fechaFinStr == null) {
             return ResponseEntity.badRequest().body("Faltan datos obligatorios.");
@@ -40,8 +47,13 @@ public ResponseEntity<?> crearReserva(@RequestBody Map<String, Object> reservaDa
         LocalDate fechaInicio = LocalDate.parse(fechaInicioStr);
         LocalDate fechaFin = LocalDate.parse(fechaFinStr);
 
+//añadir if para que fecha fin no sea antes de fecha inicio
+        if(fechaInicio.isAfter(fechaFin)){
+            return ResponseEntity.badRequest().body("Las fechas estan mal puestas");
+        }
+//...        
         // Llamar al servicio
-        Reserva nuevaReserva = servicio.crearReserva(fechaInicio, fechaFin, cantidad, id, numeroHabitacion);
+        Reserva nuevaReserva = servicio.crearReserva(fechaInicio, fechaFin, cantidad, id, numeroHabitacion ,hotel );
 
         return ResponseEntity.ok(nuevaReserva);
     } catch (Exception e) {
@@ -53,4 +65,13 @@ public ResponseEntity<?> crearReserva(@RequestBody Map<String, Object> reservaDa
     public List<Reserva> ListaReservas(@PathVariable Long idUsuario) {
     return servicio.listarReservas(idUsuario);
 }
+
+    @GetMapping("ListaReservasAdmin")
+     public List<Reserva> ListaReservasAdmin(){
+
+List<Reserva> reservas=servicio.todo();
+
+        return reservas;
+     }
+
 }

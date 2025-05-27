@@ -15,7 +15,7 @@ public class Habitacion {
     @Column(name = "ID_habitacion")
     private Long id;    
 
-    @Column(name = "numero", nullable = false, unique = true)
+    @Column(name = "numero", nullable = false)
     private String nuemro; 
 
     @Column(name = "planta", nullable = false)
@@ -32,6 +32,10 @@ public class Habitacion {
     @ManyToOne
     @JoinColumn(name = "ID_hotel", nullable = false)
     private Hotel hotel;
+
+    @Column(name = "estado", nullable = false)
+    private boolean estado;
+
 
     public Habitacion() {
         // Constructor vacío requerido por JPA
@@ -91,5 +95,13 @@ public class Habitacion {
 
     public void setNmax(int nmax) {
         Nmax = nmax;
+    }
+    
+    public boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 }

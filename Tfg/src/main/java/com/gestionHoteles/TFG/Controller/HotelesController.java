@@ -5,22 +5,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gestionHoteles.TFG.Entity.Habitacion;
 import com.gestionHoteles.TFG.Entity.Hotel;
-import com.gestionHoteles.TFG.Entity.Reserva;
 import com.gestionHoteles.TFG.Repository.RepositoryHabitacion;
 import com.gestionHoteles.TFG.Repository.RepositoryHotel;
-import com.gestionHoteles.TFG.Services.ServiceReserva;
+
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
-import java.security.Provider.Service;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -85,7 +83,8 @@ public class HotelesController {
             String numero = data.get("numero");
             String planta = data.get("planta");
             String nMaxStr = data.get("nmax");
-            Long hotelId = Long.parseLong(data.get("hotelId"));
+            String hotelId = data.get("hotelId");
+
 
             // Validar que los datos no sean nulos o vacíos
             if (numero == null || numero.isEmpty()) {
@@ -103,8 +102,8 @@ public class HotelesController {
                 throw new RuntimeException("El número máximo de personas debe ser mayor que 0");
             }
 
-            // Buscar el hotel por ID
-            Hotel hotel = repositoryHotel.findById(hotelId).orElse(null);
+            // Buscar el hotel por el Nombre
+            Hotel hotel = repositoryHotel.findByNombre(hotelId);
             if (hotel == null) {
                 return ResponseEntity.badRequest().body("El hotel no existe");
             }
@@ -115,7 +114,8 @@ public class HotelesController {
             nuevaHabitacion.setHotel(hotel);
             nuevaHabitacion.setPlanta(planta);
             nuevaHabitacion.setNmax(nMax);
-
+            nuevaHabitacion.setEstado(true); // Inicialmente la habitación está disponible
+            
             // Añadir la habitación al hotel y guardar
             hotel.getHabitaciones().add(nuevaHabitacion);
             repositoryHotel.save(hotel);
@@ -169,11 +169,14 @@ public class HotelesController {
             List<Map<String, Object>> habitacionesInfo = new ArrayList<>(); 
 
             for (Habitacion habitacion : habitaciones) {
+
+                if(habitacion.getEstado()==true){
                 Map<String, Object> info = new HashMap<>();
                 info.put("numero", habitacion.getNuemro());
                 info.put("planta", habitacion.getPlanta());
                 info.put("nmax", habitacion.getNmax());
-                habitacionesInfo.add(info);
+                habitacionesInfo.add(info); 
+            }
             }
             return ResponseEntity.ok(habitacionesInfo);
         } catch (Exception e) {

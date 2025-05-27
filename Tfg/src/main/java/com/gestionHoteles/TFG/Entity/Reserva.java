@@ -3,6 +3,7 @@ package com.gestionHoteles.TFG.Entity;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
 
@@ -87,6 +88,11 @@ public class Reserva {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    @JsonProperty("correoUsuario")
+    public String getUsuarioCorreo(){
+return usuario!=null ?usuario.getCorreo():null;
     }
 
 }

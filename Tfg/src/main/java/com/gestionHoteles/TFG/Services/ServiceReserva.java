@@ -12,6 +12,7 @@ import com.gestionHoteles.TFG.Repository.RepositoryUsuario;
 import com.gestionHoteles.TFG.Repository.RepositoryHabitacion;
 import com.gestionHoteles.TFG.Entity.Usuario;
 import com.gestionHoteles.TFG.Entity.Habitacion;
+import com.gestionHoteles.TFG.Entity.Hotel;
 
 @Service
 public class ServiceReserva {
@@ -25,7 +26,7 @@ public class ServiceReserva {
     @Autowired
     private RepositoryHabitacion habitacionRepository;
 
-    public Reserva crearReserva(LocalDate fechaInicio, LocalDate fechaFin, int cantidad, Long iduser, String numeroHabitacion) {
+    public Reserva crearReserva(LocalDate fechaInicio, LocalDate fechaFin, int cantidad, Long iduser, String numeroHabitacion ,Hotel hotel) {
         LocalDate fechaActual = LocalDate.now();
         if (fechaInicio.isBefore(fechaActual) || fechaFin.isBefore(fechaActual)) {
             throw new RuntimeException("La fecha de inicio y fin deben ser posteriores a la fecha actual");
@@ -46,16 +47,24 @@ public class ServiceReserva {
             throw new RuntimeException("Usuario no encontrado");
         }
 
+    Habitacion habitacionEntity = habitacionRepository.findByHotelAndNuemro(hotel, numeroHabitacion);
+
+
         // Buscar la habitación por número
-        Habitacion habitacionEntity = habitacionRepository.findByNuemro(numeroHabitacion);
         if (habitacionEntity == null) {
             throw new RuntimeException("Habitación no encontrada");
         }
+
 
         // Verificar que la cantidad no exceda el máximo de la habitación
         if (cantidad > habitacionEntity.getNmax()) {
             throw new RuntimeException("La cantidad de personas excede el máximo permitido para esta habitación");
         }
+
+        
+
+
+        habitacionEntity.setEstado(false); // Cambiar el estado de la habitación a ocupada
 
         Reserva reserva = new Reserva();
         reserva.setFechaInicio(fechaInicio);
@@ -83,6 +92,10 @@ public class ServiceReserva {
         if (reserva == null) {
             throw new RuntimeException("Reserva no encontrada");
         }
+    }
+
+    public List<Reserva> todo() {
+return reservaRepository.findAll();
     }
 
 }
