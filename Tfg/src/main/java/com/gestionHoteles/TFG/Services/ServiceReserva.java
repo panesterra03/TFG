@@ -92,6 +92,10 @@ public class ServiceReserva {
         if (reserva == null) {
             throw new RuntimeException("Reserva no encontrada");
         }
+        Habitacion habitacion =reserva.getHabitacion();
+        habitacion.setEstado(true);
+        habitacionRepository.save(habitacion);
+        reservaRepository.delete(reserva);
     }
 
     public List<Reserva> todo() {
